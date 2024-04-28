@@ -4,6 +4,7 @@ using Infrastructures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructures.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240428093746_ChangesOnLike")]
+    partial class ChangesOnLike
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -181,11 +184,14 @@ namespace Infrastructures.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<Guid?>("blogFKId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("Blog");
-
                     b.HasIndex("User");
+
+                    b.HasIndex("blogFKId");
 
                     b.ToTable("Likes");
                 });
@@ -343,17 +349,15 @@ namespace Infrastructures.Migrations
 
             modelBuilder.Entity("Domain.Entity.Like", b =>
                 {
-                    b.HasOne("Domain.Entity.Blog", "blogFK")
-                        .WithMany()
-                        .HasForeignKey("Blog")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Domain.AppUser", "userFK")
                         .WithMany()
                         .HasForeignKey("User")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Domain.Entity.Blog", "blogFK")
+                        .WithMany()
+                        .HasForeignKey("blogFKId");
 
                     b.Navigation("blogFK");
 
