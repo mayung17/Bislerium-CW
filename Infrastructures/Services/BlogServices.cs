@@ -1,9 +1,14 @@
 ﻿using Application.Interfaces;
+using Domain;
 using Domain.Entity;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,9 +17,14 @@ namespace Infrastructures.Services
     public class BlogServices : IBlog
     {
         private readonly ApplicationDbContext _context;
-        public BlogServices(ApplicationDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public BlogServices(ApplicationDbContext context, UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
+            _httpContextAccessor = httpContextAccessor;
             _context = context;
+            _userManager = userManager;
         }
         public async Task<Blog> AddBlog(Blog blog)
         {
@@ -28,6 +38,14 @@ namespace Infrastructures.Services
             var result = await _context.Blogs.FindAsync(id);
             if (result != null)
             {
+                // Get the current user's ID
+                var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                string user = await _userManager.FindByIdAsync(userId);
+              
+                if (result.User != user)
+                {
+                    throw new UnauthorizedAccessException("You are not authorized to delete this blog");
+                }
                 _context.Blogs.Remove(result);
                 await _context.SaveChangesAsync();
             }
@@ -45,10 +63,7 @@ namespace Infrastructures.Services
 
         }
 
-        public Task<Blog> GetBlogById(string id)
-        {
-            throw new NotImplementedException();
-        }
+   
 
         public async Task<Blog> UpdateBlog(Blog blog)
         {

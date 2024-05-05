@@ -155,14 +155,70 @@ namespace Infrastructures.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("blogFKId")
+                    b.HasKey("Id");
+
+                    b.HasIndex("Blog");
+
+                    b.ToTable("BlogsHistories");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BlogId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DislikeCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("LikeCount")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("PostedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("blogFKId");
+                    b.HasIndex("BlogId");
 
-                    b.ToTable("BlogsHistories");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Domain.Entity.CommentHistory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CommentContentPrevious")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("CommentCreatedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("Comments")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CommwntModifiedDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Comments");
+
+                    b.ToTable("CommentHistories");
                 });
 
             modelBuilder.Entity("Domain.Entity.Like", b =>
@@ -188,6 +244,31 @@ namespace Infrastructures.Migrations
                     b.HasIndex("User");
 
                     b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("Domain.Entity.LikeComment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Comment")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("ReactionType")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Comment");
+
+                    b.HasIndex("User");
+
+                    b.ToTable("LikeComments");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -336,9 +417,39 @@ namespace Infrastructures.Migrations
                 {
                     b.HasOne("Domain.Entity.Blog", "blogFK")
                         .WithMany()
-                        .HasForeignKey("blogFKId");
+                        .HasForeignKey("Blog")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("blogFK");
+                });
+
+            modelBuilder.Entity("Domain.Entity.Comment", b =>
+                {
+                    b.HasOne("Domain.Entity.Blog", "Blog")
+                        .WithMany()
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Blog");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Entity.CommentHistory", b =>
+                {
+                    b.HasOne("Domain.Entity.Comment", "commentFk")
+                        .WithMany()
+                        .HasForeignKey("Comments")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("commentFk");
                 });
 
             modelBuilder.Entity("Domain.Entity.Like", b =>
@@ -356,6 +467,25 @@ namespace Infrastructures.Migrations
                         .IsRequired();
 
                     b.Navigation("blogFK");
+
+                    b.Navigation("userFK");
+                });
+
+            modelBuilder.Entity("Domain.Entity.LikeComment", b =>
+                {
+                    b.HasOne("Domain.Entity.Comment", "commentFk")
+                        .WithMany()
+                        .HasForeignKey("Comment")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.AppUser", "userFK")
+                        .WithMany()
+                        .HasForeignKey("User")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("commentFk");
 
                     b.Navigation("userFK");
                 });

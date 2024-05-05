@@ -9,8 +9,8 @@ namespace Application.Interfaces
 {
     public interface ILike
     {
-        Task<Like> AddUpvote(Like like);
-        Task<Like> AddDownVote( Like like);
+        Task<LikeResponse> AddUpvote(Like like);
+        Task<LikeResponse> AddDownVote( Like like);
         Task<Like> GetUsersLike(Guid id, string u_id);
         Task DeleteVote(Guid id);
 

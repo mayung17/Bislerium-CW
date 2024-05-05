@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 
 namespace Domain
 {
-    public class AppUser:IdentityUser
+    public class AppUser : IdentityUser
     {
+        public static implicit operator string?(AppUser? v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

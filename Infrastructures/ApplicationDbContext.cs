@@ -21,6 +21,12 @@ namespace Infrastructures
         public DbSet<Blog> Blogs { get; set; }
 
         public DbSet<BlogHistory> BlogsHistories { get; set; }
+
+        public DbSet<CommentHistory> CommentHistories { get; set; }
+        public DbSet<LikeComment> LikeComments { get; set; }
+
+
+        public DbSet<Comment> Comments { get; set; }
         public DbSet<Like> Likes { get; set; }
 
 

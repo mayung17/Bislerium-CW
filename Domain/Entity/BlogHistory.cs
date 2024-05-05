@@ -24,7 +24,7 @@ namespace Domain.Entity
         public DateTime? BlogCreatedDateTime{ get;set; }
         public DateTime? BlogModifiedDateTime { get;set; } = DateTime.Now;
 
-        [ForeignKey(nameof(Blog))]
+        [ForeignKey(nameof(blogFK))]
 
         public Guid Blog { get; set; }
 

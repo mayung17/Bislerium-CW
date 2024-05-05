@@ -59,6 +59,8 @@ namespace Presentation
            
             //Add Authorization
             builder.Services.AddAuthorizationBuilder();
+            builder.Services.AddScoped<IComment, CommentServices>();
+            builder.Services.AddScoped<ILikeComment, CommentLikeServices>();
             builder.Services.AddScoped<IBlog,BlogServices>();
             builder.Services.AddScoped<ILike, LikeServices>();
             builder.Services.AddIdentity<AppUser,IdentityRole>()
