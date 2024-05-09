@@ -11,6 +11,7 @@ using System.Reflection.Metadata;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Infrastructures.Services
 {
@@ -39,13 +40,13 @@ namespace Infrastructures.Services
             if (result != null)
             {
                 // Get the current user's ID
-                var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                string user = await _userManager.FindByIdAsync(userId);
+                //var userId = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                //string user = await _userManager.FindByIdAsync(userId);
               
-                if (result.User != user)
-                {
-                    throw new UnauthorizedAccessException("You are not authorized to delete this blog");
-                }
+                //if (result.User != user)
+                //{
+                //    throw new UnauthorizedAccessException("You are not authorized to delete this blog");
+                //}
                 _context.Blogs.Remove(result);
                 await _context.SaveChangesAsync();
             }
@@ -62,8 +63,37 @@ namespace Infrastructures.Services
             return await _context.Blogs.FirstOrDefaultAsync(x => x.Id == id);
 
         }
+        public async Task<IEnumerable<Blog>> GetAllBlogsPagination( string sortField, int pageNumber = 1, int pageSize = 1)
+        {
+            IQueryable<Blog> query = _context.Blogs;
+           
+            switch (sortField.ToLower())
+            {
+                case "popularity":
+                    query = query.OrderByDescending(b => b.Popularity);
+                    break;
+                case "recency":
+                    // Sort by CreatedDate in descending order to get the latest blogs first
+                    query = query.OrderByDescending(b => b.CreatedDate);
+                    break;
+                case "random":
+                    // Shuffle the list randomly
+                    query = query.OrderBy(b => Guid.NewGuid());
+                    break;
+                default:
+                    // Default to sorting by popularity if invalid sortField is provided
+                    query = query.OrderByDescending(b => b.Popularity);
+                    break;
+            }
+            var blogs = await query
+                // Adjust the ordering as per your requirement
+               .Skip((pageNumber - 1) * pageSize)
+               .Take(pageSize)
+               .ToListAsync();
 
-   
+            return blogs;
+        }
+
 
         public async Task<Blog> UpdateBlog(Blog blog)
         {

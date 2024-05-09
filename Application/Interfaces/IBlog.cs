@@ -14,6 +14,7 @@ namespace Application.Interfaces
         Task DeleteBlog(Guid id);
         Task<Blog> GetBlogById(Guid id);
         Task<IEnumerable<Blog>> GetAllBlogs();
+        Task<IEnumerable<Blog>>GetAllBlogsPagination(string sortField, int pageNumber=1, int pageSize=10);
 
     }
 }

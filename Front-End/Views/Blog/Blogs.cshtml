@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Domain.Entity.Blog>
+@{
+    ViewData["Title"] = "Blogs";
+    var pageNumber = ViewBag.PageNumber != null ? (int)ViewBag.PageNumber : 1;
+    var pageSize = ViewBag.PageSize != null ? (int)ViewBag.PageSize : 10;
+    var nextPage = pageNumber + 1;
+    var prevPage = pageNumber - 1;
+}
+
+<div class="container">
+    <h1>Check Out Our Blogs</h1>
+    <!-- Sorting Options -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <strong>Sort By:</strong>
+            <a href="@Url.Action("Blogs", new { pageNumber = 1, sortField = "popularity" })">Popularity</a> |
+            <a href="@Url.Action("Blogs", new { pageNumber = 1, sortField = "recency" })">Recency</a> |
+            <a href="@Url.Action("Blogs", new { pageNumber = 1, sortField = "random" })">Random</a>
+        </div>
+    </div>
+
+    <!-- Blog Cards -->
+    <div class="row">
+        @foreach (var blog in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    @if (!string.IsNullOrEmpty(blog.ImageName))
+                    {
+                        <img src="~/Images/Blogs/@blog.ImageName" class="card-img-top" alt="Blog Image">
+                    }
+                    else
+                    {
+                        
+                        <img src="~/Images/Blogs/default.png" class="card-img-top" alt="Blog Image">
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@blog.BlogTitle</h5>
+                        <p class="card-text">@Html.Raw(blog.BlogContent.Substring(0, Math.Min(blog.BlogContent.Length, 100)))</p>
+                        <a href="@Url.Action("BlogDetail", new { id = blog.Id })" class="card-link">Read More</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination Links -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(pageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Blogs", new { pageNumber = prevPage })" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item @(pageNumber == 1 ? "active" : "")">
+                <a class="page-link" href="@Url.Action("Blogs", new { pageNumber = 1 })">1</a>
+            </li>
+            @for (int i = 2; i <= ViewBag.PageCount; i++)
+            {
+                <li class="page-item @(pageNumber == i ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Blogs", new { pageNumber = i })">@i</a>
+                </li>
+            }
+            <li class="page-item @(pageNumber == ViewBag.PageCount ? "disabled" : "")">
+                <a class="page-link" href="@Url.Action("Blogs", new { pageNumber = nextPage })" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

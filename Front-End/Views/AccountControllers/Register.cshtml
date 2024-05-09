@@ -1,0 +1,53 @@
+﻿@model Domain.RegisterModel1
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="max-w-screen-lg w-full mx-auto px-4">
+
+    <div class="flex justify-center items-center mt-12 rounded-md">
+        <!-- Form Container -->
+        <div class="flex-1">
+            <h1 class="text-2xl font-bold mb-8 ">User Registration</h1>
+            <form asp-action="Register">
+                <!-- Email -->
+                <div class="mb-6">
+                    <label for="email" class="block text-gray-700 font-bold mb-2">Email</label>
+                    <input asp-for="Email" id="email" name="email" type="email" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500" placeholder="Enter your email">
+                </div>
+                <!-- Password -->
+                <div class="mb-6">
+                    <label for="password" class="block text-gray-700 font-bold mb-2">Password</label>
+                    <input asp-for="Password" id="password" name="password" type="password" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500" placeholder="Enter your password">
+                </div>
+                <!-- Confirm Password -->
+                <div class="mb-6">
+                    <label for="confirmPassword" class="block text-gray-700 font-bold mb-2">Confirm Password</label>
+                    <input asp-for="ConfirmPassword" id="confirmPassword" name="confirmPassword" type="password" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500" placeholder="Confirm your password">
+                </div>
+                <!-- Role -->
+                <div class="mb-6">
+
+                    <input asp-for="Role" id="role" name="role" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:border-blue-500" value="Blogger" placeholder="Enter your role" hidden>
+                </div>
+                <!-- Submit Button -->
+                <div class="flex mb-6">
+                    <button type="submit" class="bg-blue-700 text-white w-full px-4 py-2 rounded-md hover:bg-blue-600">Register</button>
+                </div>
+                <a class="items-center text-blue-700 text-canter" href="login.html">I have an account? Login Now</a>
+            </form>
+        </div>
+        <!-- Image Container -->
+        <div class="flex-1 rounded-4 flex justify-center">
+            <img src="~/Images/img/img3.jpg" alt="Placeholder Image" class="px-4 w-full rounded-lg">
+        </div>
+    </div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

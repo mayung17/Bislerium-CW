@@ -63,7 +63,6 @@ namespace Presentation.Controllers
             return BadRequest(result.Errors);
         }
 
-        [Authorize(Roles = "Admin")]
         [HttpGet("get/{id}")]
         public async Task<IActionResult> GetUser(string id)
         {

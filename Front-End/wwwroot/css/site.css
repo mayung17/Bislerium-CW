@@ -20,3 +20,28 @@ html {
 body {
   margin-bottom: 60px;
 }
+/* Change background color */
+.navbar {
+    background-color: lightslategrey;
+}
+
+/* Change text color for links */
+.navbar-nav .nav-link {
+    color: #343a40 !important; /* Use !important to override Bootstrap styles */
+}
+
+ /* Change hover color for links */
+.navbar-nav .nav-link:hover {
+        color: #007bff !important;
+    }
+
+/* Change active link color */
+.navbar-nav .nav-item.active .nav-link {
+    color: #007bff !important;
+}
+
+
+/* Optional: Change font size for navbar items */
+.navbar-nav .nav-link {
+    font-size: 16px;
+}

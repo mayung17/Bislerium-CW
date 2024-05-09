@@ -1,9 +1,13 @@
 ﻿using Application.Interfaces;
 using Domain.Entity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace Presentation.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class BlogController : Controller
     {
         private readonly IBlog _blogService;
@@ -42,6 +46,18 @@ namespace Presentation.Controllers
             }
             return Ok(result);
         }
+        [HttpGet("GetBlogspag")]
+        public async Task<ActionResult<IEnumerable<Blog>>> GetAllBlogsPagination(string sortField, int pageNumber,int pageSize)
+        {
+    
+            var result=await _blogService.GetAllBlogsPagination(sortField, pageNumber,pageSize);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+            
+        }
 
         [HttpDelete, Route("DeleteBlog")]
         public async Task<IActionResult> DeleteBlog(Guid Id)
@@ -62,5 +78,16 @@ namespace Presentation.Controllers
             return Ok(result);
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid Id)
+        {
+            var result = _blogService.DeleteBlog(Id);
+            if (result == null)
+            {
+                return NotFound();
+            }
+            return Ok(result);
+        }
     }
 }

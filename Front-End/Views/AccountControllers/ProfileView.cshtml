@@ -1,0 +1,62 @@
+﻿@using System.Security.Claims
+@model Domain.ViewModel.ProfileViewModel;
+
+@{
+    ViewData["Title"] = "ProfileView";
+}
+
+<h1>ProfileView</h1>
+<!-- User Information -->
+<div class="mx-auto mt-12 bg-white p-6 rounded-md shadow-md mb-8">
+    <div class="flex items-center mb-4">
+        <!-- Profile Picture (Replace src with actual image URL) -->
+        <img src="~/Images/img/img1.jpg" alt="Profile Picture" class="w-20 h-20 rounded-full mr-4">
+        <!-- User Information -->
+        <div>
+            <h1 class="text-3xl font-bold">@Model.User.UserName</h1>
+            <p class="text-gray-700">Email: @Model.User.Email</p>
+            <p class="text-gray-700">Location: Biratnagar, Nepal</p>
+            <!-- Edit Profile Button -->
+            
+
+        </div>
+        <div>
+        <a class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md mt-4 hover:text-white hover:bg-blue-600" asp-controller="AccountControllers" asp-action="ProfileUpdate" asp-route-Id="@User.FindFirstValue(ClaimTypes.NameIdentifier).ToString()">Edit Profile</a>
+            <a class="bg-blue-50 text-blue-700 px-4 py-2 rounded-md mt-4 hover:text-white hover:bg-blue-600" asp-controller="AccountControllers" asp-action="ChangePassword" asp-route-Id="@User.FindFirstValue(ClaimTypes.NameIdentifier).ToString()">Change Password</a>
+        </div>
+    </div>
+</div>
+
+<!-- Authored Blog Posts -->
+<div class="mx-auto bg-white p-6 rounded-md shadow-md">
+    <h2 class="text-2xl font-bold mb-4">Authored Blog Posts</h2>
+    <!-- Blog Posts Table -->
+    <table class="w-full border-collapse border border-gray-200">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="py-2 px-4 border border-gray-200">Title</th>
+                <th class="py-2 px-4 border border-gray-200">Date</th>
+                <th class="py-2 px-4 border border-gray-200">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Loop through Authored Blog Posts -->
+            @foreach (var blogPost in Model.AuthoredBlogPosts)
+            {
+                <tr>
+                    <td class="py-2 px-4 border border-gray-200">@blogPost.BlogTitle</td>
+                    <td class="py-2 px-4 border border-gray-200">@blogPost.CreatedDate</td>
+                    <td class="py-2  px-2 border border-gray-200">
+                        <!-- Edit and Delete Buttons -->
+                        <a asp-controller="Blog" asp-action="Update" asp-route-Id="@blogPost.Id"><button class="bg-blue-700 text-white px-3 py-1  rounded-md hover:bg-blue-600">Edit</button></a>
+                        <form asp-controller="Blog" asp-action="Delete" method="post">
+                            <input value="@blogPost.Id" name="Id" hidden/>
+                           <button class="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+    </div>

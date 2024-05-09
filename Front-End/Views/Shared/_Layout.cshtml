@@ -1,31 +1,85 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Front_End</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Front_End.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Front_End</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Blog: IIC</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        @if (User.IsInRole("Blogger"))
+                        {
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="Blogs">Explore Blog</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        }
+
+                        @if (User.IsInRole("Blogger"))
+                        {
+                            @* <p>Hi, @User.FindFirst(ClaimTypes.Email)?.Value</p> *@
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
+                            </li>
+                          
+
+                        }
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Blogger"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="LatestBlog">Latest Blog</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="Index">Uploaded Blog</a>
+                            </li>
+                            
+                        }
                     </ul>
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AccountControllers" asp-action="Login"><button class="btn btn-outline-primary">Login</button></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AccountControllers" asp-action="Register"><button class="btn btn-outline-secondary">Register</button></a>
+                            </li>
+                        </ul>
+                    }
+                    else
+                    {
+                        <ul class="navbar-nav ml-auto">
+                            <li class="mt-2">
+                                <form method="post" asp-controller="AccountControllers" asp-action="Logout">
+                                    <button type="submit" class="btn btn-outline-danger">Logout</button>
+                                </form>
+                            </li>
+
+                            <li>
+                                <a class="nav-link text-dark" asp-controller="AccountControllers" asp-action="ProfileView" asp-route-Id="@User.FindFirstValue(ClaimTypes.NameIdentifier).ToString()" class="nav-link text-blue-700"><button class="btn btn-outline-dark">My Profile</button></a>
+                            </li>
+                        </ul>
+                    }
                 </div>
             </div>
         </nav>
@@ -35,15 +89,32 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted mt-12 py-4 bg-white border-t border-gray-200">
         <div class="container">
-            &copy; 2024 - Front_End - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <p>&copy; 2024 BLOGY Application Development Final CourseWork. All rights reserved.</p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        // Request permission for notifications
+        Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+                // Permission granted, subscribe to push notifications
+                navigator.serviceWorker.register('service-worker.js');
+            }
+        });
+
+        // Handle incoming push notifications
+        self.addEventListener('push', event => {
+            const data = event.data.json();
+            self.registration.showNotification(data.title, {
+                body: data.body
+            });
+        });
+
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

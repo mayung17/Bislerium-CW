@@ -2,7 +2,63 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    
+        <!-- Hero Section -->
+        <header class="mt-12 flex flex-col sm:flex-row items-center">
+            <div class="sm:w-1/2">
+                <h1 class="text-6xl font-bold mb-4">Welcome to BLOGY</h1>
+                <p class="text-lg text-gray-600 mb-8">Discover and share your thoughts with the world.</p>
+                <a href="blog.html" class="bg-blue-700 text-white px-6 py-3 rounded-md hover:bg-blue-600">Explore Blogs</a>
+            </div>
+            <div class="sm:w-1/2 sm:pl-8 mt-4 sm:mt-0">
+                <img src="~/Images/img/img6.jpg" alt="Header Image" class="w-full h-auto rounded-lg">
+            </div>
+        </header>
+        <main>
+            <section id="about" class="mt-8">
+                <h2 class="text-2xl font-semibold mb-4">About Us</h2>
+                <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec semper purus. Vivamus dignissim lacus vel justo varius fermentum. Nam vitae sapien et nisi vestibulum tristique. Duis at lobortis urna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin et arcu vel ex convallis pulvinar. Fusce vitae metus vitae urna aliquam dapibus.</p>
+                <p class="mb-8">Morbi et mi sagittis, tincidunt quam nec, posuere urna. Nullam auctor, sapien ut fermentum elementum, libero nulla congue magna, ac eleifend velit magna in risus. Nam et sodales justo. Duis auctor metus nec risus hendrerit, nec ultrices leo lobortis.</p>
+
+            </section>
+        </main>
+
+        <!-- Features Section -->
+        <section class="mt-12">
+            <h2 class="text-3xl font-semibold mb-6">Features</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <!-- Feature 1: Blogging Platform -->
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <img src="/Images/img/img4.jpg" alt="Feature 1" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Blogging Platform</h3>
+                        <p class="text-gray-600">Create and publish your own blog posts easily.</p>
+                    </div>
+                </div>
+                <!-- Feature 2: Community Interaction -->
+                <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                    <img src="/Images/img/img1.jpg" alt="Feature 2" class="w-full h-64 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">Community Interaction</h3>
+                        <p class="text-gray-600">Engage with other users by commenting and reacting to their posts.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer -->
+      
+    </div>
+</body>
+</html>
+
